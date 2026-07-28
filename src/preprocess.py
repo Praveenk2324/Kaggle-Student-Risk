@@ -10,10 +10,10 @@ def preprocess_data(df: pd.DataFrame):
     df = df.copy()
     
     # 1. Health Condition Label Encoding (only applies to Training data)
-    if 'health_condition' in df.columns and df['health_condition'].dtype == 'object':
-        # Using map instead of LabelEncoder to ensure consistent 0, 1, 2 mapping
+    if 'health_condition' in df.columns:
+        # Using replace to ensure consistent 0, 1, 2 mapping
         health_mapping = {'at-risk': 0, 'fit': 1, 'unhealthy': 2}
-        df['health_condition'] = df['health_condition'].map(health_mapping)
+        df['health_condition'] = df['health_condition'].replace(health_mapping).astype(int)
         
     # 2. Diet Type: drop nulls and one-hot encode
     # 2. Diet Type: impute missing values to preserve all rows, then one-hot encode
@@ -22,14 +22,14 @@ def preprocess_data(df: pd.DataFrame):
         df['diet_type'] = df['diet_type'].fillna(df['diet_type'].mode()[0] if not df['diet_type'].mode().empty else 'Unknown')
         df = pd.get_dummies(df, columns=['diet_type'], drop_first=True, dtype=int)
         
+        
     # 3. Stress Level: Impute using global mode to prevent target leakage
     if 'stress_level' in df.columns:
         # Replaced health_condition groupby with global mode
         df['stress_level'] = df['stress_level'].fillna(df['stress_level'].mode()[0] if not df['stress_level'].mode().empty else 'medium')
             
         stress_mapping = {'low': 0, 'medium': 1, 'high': 2}
-        if df['stress_level'].dtype == 'object':
-            df['stress_level'] = df['stress_level'].map(stress_mapping)
+        df['stress_level'] = df['stress_level'].replace(stress_mapping).astype(int)
             
     # 4. Sleep Quality: impute based on stress_level mode, then map
     if 'sleep_quality' in df.columns:
@@ -41,8 +41,7 @@ def preprocess_data(df: pd.DataFrame):
             df['sleep_quality'] = df['sleep_quality'].fillna(df['sleep_quality'].mode()[0] if not df['sleep_quality'].mode().empty else 'average')
             
         sleep_mapping = {'poor': 0, 'average': 1, 'good': 2}
-        if df['sleep_quality'].dtype == 'object':
-            df['sleep_quality'] = df['sleep_quality'].map(sleep_mapping)
+        df['sleep_quality'] = df['sleep_quality'].replace(sleep_mapping).astype(int)
 
     # 5. Physical Activity Level: impute based on exercise_duration quantiles, then map
     if 'physical_activity_level' in df.columns:
@@ -58,8 +57,7 @@ def preprocess_data(df: pd.DataFrame):
             df['physical_activity_level'] = df['physical_activity_level'].fillna(df['physical_activity_level'].mode()[0] if not df['physical_activity_level'].mode().empty else 'moderate')
             
         physical_mapping = {'sedentary': 0, 'moderate': 1, 'active': 2}
-        if df['physical_activity_level'].dtype == 'object':
-            df['physical_activity_level'] = df['physical_activity_level'].map(physical_mapping)
+        df['physical_activity_level'] = df['physical_activity_level'].replace(physical_mapping)
             
         # Fill any remaining NaNs with 1 (moderate) and cast to int
         df['physical_activity_level'] = df['physical_activity_level'].fillna(1).astype(int)
@@ -70,8 +68,7 @@ def preprocess_data(df: pd.DataFrame):
         df['smoking_alcohol'] = df['smoking_alcohol'].fillna(df['smoking_alcohol'].mode()[0] if not df['smoking_alcohol'].mode().empty else 'yes')
             
         habit_mapping = {'no': 0, 'occasional': 1, 'yes': 2}
-        if df['smoking_alcohol'].dtype == 'object':
-            df['smoking_alcohol'] = df['smoking_alcohol'].map(habit_mapping)
+        df['smoking_alcohol'] = df['smoking_alcohol'].replace(habit_mapping).astype(int)
 
     # 7. Gender: impute with mode, one-hot encode
     if 'gender' in df.columns:
