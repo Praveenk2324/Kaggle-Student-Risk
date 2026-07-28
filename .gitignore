@@ -1,2 +1,7 @@
 .env
 data/
+Noteboooks/
+.vscode
+
+*.ipynb
+*__pycache__
