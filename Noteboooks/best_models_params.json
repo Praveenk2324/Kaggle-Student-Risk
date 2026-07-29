@@ -1,0 +1,24 @@
+{
+    "random_forest": {
+        "n_estimators": 156,
+        "max_depth": 27,
+        "min_samples_split": 8,
+        "min_samples_leaf": 1,
+        "max_features": "log2"
+    },
+    "catboost": {
+        "iterations": 882,
+        "learning_rate": 0.1255177474322984,
+        "depth": 10,
+        "l2_leaf_reg": 2,
+        "bagging_temperature": 0.46269931475793813
+    },
+    "xgboost": {
+        "n_estimators": 485,
+        "learning_rate": 0.19233650728925847,
+        "max_depth": 10,
+        "subsample": 0.6767655133451045,
+        "colsample_bytree": 0.9786605812318665,
+        "min_child_weight": 6
+    }
+}
