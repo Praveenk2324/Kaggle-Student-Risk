@@ -2,7 +2,7 @@
 data/
 .vscode
 
-
+Noteboooks/catboost_info
 *__pycache__
 
 results/
